@@ -1,0 +1,5 @@
+Photo provider: Unsplash (https://unsplash.com/license)
+Image delivery: remote images.unsplash.com URLs referenced in pages.
+Copyright license: free commercial and non-commercial use under Unsplash License; review image-level rights, model/property releases and third-party trademarks.
+Attribution: Unsplash, included in footer.
+No photos are bundled with this project.
