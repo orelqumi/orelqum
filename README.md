@@ -30,3 +30,18 @@ Images require internet access, and the photo URLs could change. For a fully sel
 
 ## Brand kit
 Navy `#102746`, dark navy `#0b1b31`, electric blue `#2b86e8`, light background `#f3f7fb`; Manrope headings and DM Sans body. SVG brandmark in `assets/logo.svg`. Tagline: **Build Beyond Boundaries.**
+
+
+## Revised visual edition
+This edition reduces excessive whitespace, features stronger photo-led interior page banners, denser service cards and improved spacing on mobile. Photography is linked from Unsplash and requires an internet connection; local backups are not embedded. Verify the rights applicable to any imagery used before publication.
+
+
+## Motion edition notes
+- Smooth entry animations, scroll reveal and animated navigation are enabled on modern browsers. Reduced-motion preferences are respected.
+- The homepage media area now contains working tabs: Featured Videos, Live Sessions and Video Preview.
+- Video Preview lets a visitor select a local MP4/WebM/Ogg file and play it in the browser only. Files are not uploaded, stored or published.
+- The Live Sessions view is a labelled placeholder for a future verified broadcast URL. It does not falsely claim that a live stream is occurring.
+- To show real public videos to everyone, embed videos hosted on an authorised provider or configure a production upload and streaming backend.
+
+## Distinct text animations
+Hero text appears word by word, section headings reveal on scroll with an accent underline, eyebrow text expands into view, navigation labels move slightly on hover, and button highlights sweep on hover. These effects automatically disable when a visitor requests reduced motion.
