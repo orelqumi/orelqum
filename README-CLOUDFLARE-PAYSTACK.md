@@ -37,3 +37,6 @@ Use `npx wrangler pages dev public` from this repository root. For testing payme
 - Cloudflare Pages Git integration: https://developers.cloudflare.com/pages/get-started/git-integration/
 - Paystack transaction API: https://paystack.com/docs/api/transaction/
 - Paystack payment verification: https://paystack.com/docs/payments/verify-payments/
+
+## Compact navigation update
+All public pages now have a compact responsive header. Main links: Home, Services, Pricing, Build Your Website, Academy, Contact and Get a Quote. Services/Pricing/Academy have accessible click-to-open dropdown menus. Smaller screens use the existing mobile menu button. Payment functions and Cloudflare/Paystack setup are unchanged.

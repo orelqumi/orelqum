@@ -152,3 +152,16 @@ function updateQuoteEstimate(){
   estimateBox.querySelector('small').textContent=selected==='Website Maintenance / Support'?'Monthly support is optional and starts after agreement.':selected?'Indicative starting price only. Your final quotation depends on features and scope.':'Final pricing depends on your requirements.';
 }
 if(quoteCategory&&estimateBox){quoteCategory.addEventListener('change',updateQuoteEstimate);updateQuoteEstimate();}
+
+// Compact navigation dropdowns. Works with keyboard, touch and mouse.
+const navGroups=[...document.querySelectorAll('.nav-dropdown')];
+function closeNavGroups(except=null){navGroups.forEach(group=>{if(group===except)return;group.classList.remove('open');group.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded','false')})}
+navGroups.forEach(group=>{
+ const toggle=group.querySelector('.nav-dropdown-toggle');
+ toggle?.addEventListener('click',()=>{const open=!group.classList.contains('open');closeNavGroups(group);group.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open))});
+ group.querySelectorAll('.nav-dropdown-menu a').forEach(link=>link.addEventListener('click',()=>closeNavGroups()));
+});
+document.addEventListener('click',event=>{if(!event.target.closest('.nav-dropdown'))closeNavGroups()});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closeNavGroups()});
+// Highlight parent dropdown of a currently active submenu link.
+navGroups.forEach(group=>{if(group.querySelector('.nav-dropdown-menu a[aria-current="page"]'))group.querySelector('.nav-dropdown-toggle')?.classList.add('has-active-page')});
