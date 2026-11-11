@@ -69,8 +69,27 @@ if (!reduceMotion) {
 const selectedPackage = new URLSearchParams(window.location.search).get('package');
 const packageSelect = document.getElementById('package-select');
 if (packageSelect && selectedPackage) {
-  const option = [...packageSelect.options].find(o => o.value === selectedPackage);
-  if (option) packageSelect.value = selectedPackage;
+  // Keep existing links from School Pricing and all other service pages working.
+  const fromOldSchoolLinks = {
+    'Starter School': 'School / Education Website',
+    'Standard School': 'School / Education Website',
+    'Premium School': 'School / Education Website',
+    'School Website': 'School / Education Website',
+    'Basic Care Maintenance': 'Website Maintenance / Support',
+    'School Plus Maintenance': 'Website Maintenance / Support',
+    'Other website project': 'Other / Not Sure Yet'
+  };
+  const target = fromOldSchoolLinks[selectedPackage] || selectedPackage;
+  const option = [...packageSelect.options].find(o => o.value === target);
+  if (option) packageSelect.value = target;
+  const projectService = document.getElementById('website-type-select');
+  if (projectService && (selectedPackage.includes('Maintenance') || selectedPackage.includes('Care'))) {
+    projectService.value = 'Maintain or update my website';
+  }
+  if (selectedPackage && selectedPackage !== target) {
+    const projectDescription = document.querySelector('textarea[name="project_details"]');
+    if (projectDescription && !projectDescription.value) projectDescription.placeholder = `Interested in: ${selectedPackage}. Tell us more about your project and requirements.`;
+  }
 }
 
 // VIP upgrade reveals for richer homepage and service blocks.

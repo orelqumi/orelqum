@@ -59,3 +59,6 @@ Hero text appears word by word, section headings reveal on scroll with an accent
 - The home page leads with hiring a developer and requesting a quote, not just school services.
 - School website packages remain as one specialist offer under `school-packages.html`.
 - This is a service enquiry website, **not** a searchable freelance developer marketplace or verified developer directory.
+
+## Quote form correction (November 2026)
+The quotation form now offers 18 broad project categories. School websites are a single option, not the dominant list. Project service is a separate selection (new build/redesign/feature additions/maintenance). Existing school package links still preselect the matching school or maintenance category.
