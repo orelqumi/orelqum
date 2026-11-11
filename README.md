@@ -53,3 +53,9 @@ Hero text appears word by word, section headings reveal on scroll with an accent
 - The homepage and main navigation link to the pricing page.
 - Quote buttons open `quote.html` and preselect the relevant package. The form still prepares an email draft only; set your verified email in `assets/config.js`.
 - All prices and features are editable proposals. Verify capacity and costs before advertising them.
+
+## Business positioning correction
+- Orelqumi is primarily a website development service where visitors can find/hire a web developer for many types of website.
+- The home page leads with hiring a developer and requesting a quote, not just school services.
+- School website packages remain as one specialist offer under `school-packages.html`.
+- This is a service enquiry website, **not** a searchable freelance developer marketplace or verified developer directory.
