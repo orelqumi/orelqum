@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07121d">
+  <meta name="description" content="Tell Orelqumi Technologies about your website project and preferred meeting style.">
+  <title>Secure Invoice Payments | Orelqumi Technologies</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="nav-shell">
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="Orelqumi Technologies home"><img src="assets/logo.svg" alt=""><span>ORELQUMI<small>TECHNOLOGIES</small></span></a>
+    <button class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation">☰ Menu</button>
+    <nav id="primary-navigation" class="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <div class="nav-dropdown"><button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-controls="nav-services-menu">Services <span aria-hidden="true">⌄</span></button>
+        <div class="nav-dropdown-menu" id="nav-services-menu">
+          <a href="services.html">All services</a><a href="digital.html">Web development</a><a href="school-packages.html">School websites</a><a href="portfolio.html">Portfolio</a><a href="about.html">About Orelqumi</a>
+        </div>
+      </div>
+      <div class="nav-dropdown"><button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-controls="nav-pricing-menu">Pricing <span aria-hidden="true">⌄</span></button>
+        <div class="nav-dropdown-menu" id="nav-pricing-menu"><a href="website-pricing.html">All website prices</a><a href="school-packages.html">School packages</a><a href="pay-invoice.html">Pay an invoice</a></div>
+      </div>
+      <a href="build-your-website.html" class="nav-builder-link">Build Your Website</a>
+      <div class="nav-dropdown"><button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-controls="nav-academy-menu">Academy <span aria-hidden="true">⌄</span></button>
+        <div class="nav-dropdown-menu" id="nav-academy-menu"><a href="academy.html">Orelqumi Academy</a><a href="courses.html">Courses</a><a href="enrol.html">Enrol</a></div>
+      </div>
+      <a href="contact.html">Contact</a>
+      <a href="quote.html" class="nav-action">Get a Quote <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+<main><section class="page-hero pay-hero"><div class="wrap"><div class="eyebrow">ORELQUMI DIGITAL · SECURE PAYMENTS</div><h1>Pay your agreed Orelqumi invoice.</h1><p>Have you received a final quotation and invoice reference from Orelqumi? Complete the details below to pay securely through Paystack. For a new project, request a quote first.</p><div class="actions"><a class="btn btn-outline" href="quote.html">Request a quotation instead →</a></div></div></section>
+<section class="section"><div class="wrap payment-layout"><div class="form-card"><h2>Invoice payment details</h2><p class="hint">Do not pay an estimate from the website calculator. Enter only the exact total confirmed on your invoice.</p>
+<form id="invoice-payment-form" class="payment-form" novalidate>
+<div class="field"><label for="pay-name">Full name *</label><input id="pay-name" name="name" type="text" maxlength="120" autocomplete="name" required></div>
+<div class="field"><label for="pay-email">Email for payment confirmation *</label><input id="pay-email" name="email" type="email" maxlength="200" autocomplete="email" required></div>
+<div class="field"><label for="pay-invoice">Orelqumi invoice reference *</label><input id="pay-invoice" name="invoice" type="text" maxlength="60" minlength="3" placeholder="Example: ORQ-2026-001" required></div>
+<div class="field"><label for="pay-amount">Agreed amount (KES) *</label><input id="pay-amount" name="amount" type="number" min="3" max="1000000" step="0.01" inputmode="decimal" placeholder="Enter exact invoice amount" required></div>
+<label class="payment-consent"><input id="pay-acknowledge" type="checkbox" required><span>I confirm that Orelqumi has issued me this invoice and I agree to pay this exact amount. I understand this is not an automatic project order or subscription.</span></label>
+<p id="pay-message" role="status" aria-live="polite" class="notice" hidden></p>
+<button type="submit" id="pay-submit" class="btn payment-main-btn">Proceed securely to Paystack →</button>
+<p class="hint">You will be redirected to a Paystack-hosted checkout. Orelqumi never collects your card or M-PESA PIN on this page. Payments are confirmed only after Paystack verification.</p>
+</form></div>
+<aside class="callout"><div class="eyebrow">BEFORE YOU PAY</div><h3>Confirm the final project price first.</h3><ol class="school-steps"><li><strong>Plan.</strong> Choose your website and request a quotation.</li><li><strong>Approve.</strong> Agree with Orelqumi on features, milestones and price.</li><li><strong>Receive.</strong> Get your invoice reference and confirmed amount.</li><li><strong>Pay.</strong> Use this page and verify the result after checkout.</li></ol><p class="hint">Monthly website-care prices are displayed as service offers. This invoice checkout makes one-time payments only; it does not create a recurring subscription.</p></aside>
+</div></section></main><footer class="footer"><div class="wrap"><div class="footer-grid"><div><div class="brand"><img src="assets/logo.svg" alt=""><span>ORELQUMI<small>TECHNOLOGIES</small></span></div><p>Build Beyond Boundaries. Professional website development and practical technology education.</p></div><div><h4>Build</h4><a href="services.html">Services</a><a href="website-pricing.html">Starting prices</a><a href="build-your-website.html">Website calculator</a></div><div><h4>Account</h4><a href="quote.html">Request a quote</a><a href="pay-invoice.html">Pay an agreed invoice</a><a href="contact.html">Contact</a></div><div><h4>Information</h4><a href="privacy.html">Privacy</a><a href="index.html">Home</a></div></div><div class="foot-bottom"><span>© 2026 Orelqumi Technologies</span><span>Payments processed by Paystack after an agreed invoice</span></div></div></footer><script src="assets/config.js"></script><script src="assets/script.js"></script><script src="assets/payments.js"></script></body></html>
