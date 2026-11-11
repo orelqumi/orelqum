@@ -45,3 +45,11 @@ This edition reduces excessive whitespace, features stronger photo-led interior 
 
 ## Distinct text animations
 Hero text appears word by word, section headings reveal on scroll with an accent underline, eyebrow text expands into view, navigation labels move slightly on hover, and button highlights sweep on hover. These effects automatically disable when a visitor requests reduced motion.
+
+
+## School website packages (new)
+- `school-packages.html` presents Starter (KSh 13,000), Standard (KSh 22,000) and Premium (KSh 40,000+) development offers.
+- Optional maintenance plans: KSh 1,500 and KSh 3,000 per month. No payment processing or subscription activation is connected.
+- The homepage and main navigation link to the pricing page.
+- Quote buttons open `quote.html` and preselect the relevant package. The form still prepares an email draft only; set your verified email in `assets/config.js`.
+- All prices and features are editable proposals. Verify capacity and costs before advertising them.

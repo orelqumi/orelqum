@@ -63,3 +63,41 @@ if (!reduceMotion) {
     });
   });
 }
+
+
+// Prefill the quotation form when a visitor chooses a school package.
+const selectedPackage = new URLSearchParams(window.location.search).get('package');
+const packageSelect = document.getElementById('package-select');
+if (packageSelect && selectedPackage) {
+  const option = [...packageSelect.options].find(o => o.value === selectedPackage);
+  if (option) packageSelect.value = selectedPackage;
+}
+
+// VIP upgrade reveals for richer homepage and service blocks.
+if(!reduceMotion&&'IntersectionObserver' in window){
+  const extraRevealTargets=document.querySelectorAll('.counter-card,.service-spotlight-card,.path-card,.promise-card,.vip-mini-card,.vip-metric-card,.school-price-card');
+  if(extraRevealTargets.length){
+    const extraIO=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');extraIO.unobserve(entry.target);}})},{threshold:0.1,rootMargin:'0px 0px -20px 0px'});
+    extraRevealTargets.forEach((el,i)=>{el.classList.add('reveal');el.style.transitionDelay=(i%4)*0.05+'s';extraIO.observe(el);});
+  }
+}
+
+// Count-up animation for safe site metrics and package counts.
+const counters=document.querySelectorAll('[data-count]');
+if(counters.length&&'IntersectionObserver' in window){
+  const animateCounter=(el)=>{
+    if(el.dataset.done==='true') return;
+    const target=Number(el.dataset.count||0);
+    const duration=reduceMotion?0:900;
+    const start=performance.now();
+    const step=(now)=>{
+      const progress=duration?Math.min((now-start)/duration,1):1;
+      const eased=1-Math.pow(1-progress,3);
+      el.textContent=String(Math.round(target*eased));
+      if(progress<1) requestAnimationFrame(step); else {el.textContent=String(target); el.dataset.done='true';}
+    };
+    requestAnimationFrame(step);
+  };
+  const counterIO=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){animateCounter(entry.target);counterIO.unobserve(entry.target);}})},{threshold:0.35});
+  counters.forEach(counter=>counterIO.observe(counter));
+}
