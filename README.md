@@ -66,3 +66,12 @@ The quotation form now offers 18 broad project categories. School websites are a
 
 ## Broad website pricing update
 New `website-pricing.html` catalogues different website categories with indicative KES starting rates. Home links to catalogue. Quote form shows live starting price for selected website category and KES budget ranges. These are suggested offers, not validated market prices or automatic final quotations. All pricing requires confirmation of scope before sale.
+
+## NEW — Build Your Website calculator
+- Open `build-your-website.html` to estimate the one-time development cost for **16 different website types**, including schools as only one service category.
+- The calculator adds KSh 1,500 for each page above five, KSh 5,000 for a basic booking feature and KSh 2,000 for an advanced gallery. It offers optional monthly care at KSh 1,500 or KSh 3,000.
+- Click **Continue to quotation form** to transfer the selected category, pages, add-ons, estimated development amount and optional monthly maintenance into `quote.html` using URL parameters. The quotation form includes these fields in its outgoing email draft.
+- These values are **illustrative**, not binding quotations. Advanced functionality, licensing, hosting, domain, payment processing, and scope changes may affect actual pricing.
+- The website is a **static GitHub Pages website**. The form prepares a local email draft; it does not send enquiries to a server and does not accept payments. Edit `assets/config.js` with your real contact email.
+- Calculator pricing logic is in `assets/builder.js`; layout is in `assets/style.css`.
+- This ZIP contains the full site. Upload its **contents** (not only the ZIP file) to the repository root.
