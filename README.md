@@ -62,3 +62,7 @@ Hero text appears word by word, section headings reveal on scroll with an accent
 
 ## Quote form correction (November 2026)
 The quotation form now offers 18 broad project categories. School websites are a single option, not the dominant list. Project service is a separate selection (new build/redesign/feature additions/maintenance). Existing school package links still preselect the matching school or maintenance category.
+
+
+## Broad website pricing update
+New `website-pricing.html` catalogues different website categories with indicative KES starting rates. Home links to catalogue. Quote form shows live starting price for selected website category and KES budget ranges. These are suggested offers, not validated market prices or automatic final quotations. All pricing requires confirmation of scope before sale.

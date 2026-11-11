@@ -120,3 +120,35 @@ if(counters.length&&'IntersectionObserver' in window){
   const counterIO=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){animateCounter(entry.target);counterIO.unobserve(entry.target);}})},{threshold:0.35});
   counters.forEach(counter=>counterIO.observe(counter));
 }
+
+// Live indicative pricing on the project quotation form. Display only; no payment collection.
+const ORELQUMI_STARTING_PRICES = {
+  'Landing Page / Promotional Website': 'KSh 6,500',
+  'Personal Portfolio Website': 'KSh 8,000',
+  'Blog / Magazine / News Website': 'KSh 12,000',
+  'Business / Company Website': 'KSh 13,000',
+  'Construction / Home Services Website': 'KSh 13,000',
+  'School / Education Website': 'KSh 13,000',
+  'Church / Religious Organisation Website': 'KSh 13,000',
+  'Professional Services Website': 'KSh 15,000',
+  'Restaurant / Food Business Website': 'KSh 15,000',
+  'NGO / Charity / Organisation Website': 'KSh 16,000',
+  'Healthcare / Clinic Website': 'KSh 18,000',
+  'Hotel / Tourism / Travel Website': 'KSh 22,000',
+  'Real Estate / Property Website': 'KSh 22,000',
+  'Events / Booking Website': 'KSh 25,000',
+  'Online Store / E-commerce Website': 'KSh 30,000',
+  'Custom Web App / Online Platform': 'KSh 50,000+',
+  'Website Maintenance / Support': 'KSh 1,500/mo',
+  'Other / Not Sure Yet': 'Custom quote'
+};
+const quoteCategory = document.getElementById('package-select');
+const estimateBox = document.getElementById('price-estimate');
+function updateQuoteEstimate(){
+  if(!quoteCategory||!estimateBox)return;
+  const selected=quoteCategory.value;
+  const number=ORELQUMI_STARTING_PRICES[selected];
+  estimateBox.querySelector('strong').textContent=number||'Select a website type';
+  estimateBox.querySelector('small').textContent=selected==='Website Maintenance / Support'?'Monthly support is optional and starts after agreement.':selected?'Indicative starting price only. Your final quotation depends on features and scope.':'Final pricing depends on your requirements.';
+}
+if(quoteCategory&&estimateBox){quoteCategory.addEventListener('change',updateQuoteEstimate);updateQuoteEstimate();}
