@@ -1,7 +1,7 @@
 # Orelqumi Google indexing and Search Console setup
 
 ## Status
-SEO files and metadata are prepared. **Google ownership is NOT verified in this ZIP** because the exact one-time Search Console HTML tag or original HTML verification file was not supplied. **Do not click Verify until you add the exact credential and redeploy.** No live Google ranking is guaranteed.
+SEO files and metadata are prepared. **Google HTML-tag verification code is installed in `public/index.html`, but actual Google ownership verification is NOT yet confirmed.** Deploy the latest package, check the live page source, then click Verify in Google Search Console. No live ranking is guaranteed.
 
 ## Fix the error "verification file has the wrong content"
 Google checks the exact bytes of the account-specific HTML verification file at the root URL. Cloudflare may serve the homepage instead if the file is absent. This package contains a real `public/404.html` to stop missing paths from silently resolving to `index.html` on a typical Pages static setup, but the Google file must still be added.
@@ -9,8 +9,8 @@ Google checks the exact bytes of the account-specific HTML verification file at 
 **Recommended method: HTML meta tag**
 1. In Search Console, choose the property `https://orelqum.pages.dev/` (not your GitHub Pages property).
 2. Choose **HTML tag** verification and copy Google's entire `<meta name="google-site-verification" content="...">` tag.
-3. Open `public/index.html`. Find the comment `GOOGLE SEARCH CONSOLE` inside `<head>`.
-4. Paste the **exact** Google tag on the next line, without changing any characters. Do not copy example codes.
+3. The exact code provided by the owner has already been added to `public/index.html` inside `<head>`.
+4. Keep the verification tag unchanged when updating the website.
 5. Deploy using your existing Git-based Cloudflare Pages project; settings: build output directory `public`, root repository directory, no framework, build command `exit 0`.
 6. Visit `view-source:https://orelqum.pages.dev/` and search for `google-site-verification`. The exact code must appear there.
 7. Click **Verify** in Search Console. Do not remove the tag afterward.
@@ -34,4 +34,4 @@ Download the original unique Google verification HTML file and copy it unchanged
 5. Search rankings and indexing are controlled by Google and may take time.
 
 ## Cloudflare deployment note
-Keep `public/` and `functions/` alongside each other in the repository root for Git-connected Cloudflare Pages. Upload **the extracted repository files**, not only the `public` contents, if Paystack Pages Functions should also be deployed. The payment API secret must be configured securely in Cloudflare, not in code. Neither live payment processing nor ownership verification is activated by this ZIP alone.
+Keep `public/` and `functions/` alongside each other in the repository root for Git-connected Cloudflare Pages. Upload **the extracted repository files**, not only the `public` contents, if Paystack Pages Functions should also be deployed. The payment API secret must be configured securely in Cloudflare, not in code. This ZIP includes the verification tag, but Google must confirm verification after the live deployment. Live payment processing is not activated by this ZIP alone.
