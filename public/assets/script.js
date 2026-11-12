@@ -9,8 +9,20 @@ document.querySelectorAll('form[data-enquiry]').forEach(form=>form.addEventListe
  const recipient=window.ORELQUMI_CONTACT_EMAIL||'';
  const destination=recipient?recipient:'';
  const body=`Hello Orelqumi Technologies,\n\n${rows.join('\n')}\n\nSent from the Orelqumi website.`;
- const href='mailto:'+destination+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
- const msg=form.querySelector('[data-form-status]');if(msg){msg.textContent=recipient?'Your email app should open with the enquiry ready to send. Please press Send in your email app.':'Your email app should open with your enquiry ready. Enter the Orelqumi contact address as recipient, then press Send. The website owner must configure the email destination in assets/config.js.';msg.hidden=false;}
+ const msg=form.querySelector('[data-form-status]');
+ if(!recipient || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)){
+   if(msg){
+     msg.textContent='The business contact email is not configured yet. Copy your enquiry using the button below, or contact Orelqumi using the Contact page. Your information has not been sent.';
+     msg.hidden=false;
+     let copyBtn=form.querySelector('[data-copy-enquiry]');
+     if(!copyBtn){copyBtn=document.createElement('button');copyBtn.type='button';copyBtn.className='btn btn-outline';copyBtn.setAttribute('data-copy-enquiry','');msg.insertAdjacentElement('afterend',copyBtn);}
+     copyBtn.textContent='Copy enquiry details';
+     copyBtn.onclick=async()=>{const message=subject+'\n\n'+body;try{await navigator.clipboard.writeText(message);copyBtn.textContent='Enquiry copied';}catch{const area=document.createElement('textarea');area.value=message;area.style.width='100%';area.rows=8;copyBtn.insertAdjacentElement('afterend',area);area.select();copyBtn.textContent='Select and copy the enquiry below';}};
+   }
+   return;
+ }
+ const href='mailto:'+recipient+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ if(msg){msg.textContent='Your email app should open with the enquiry ready to send. Press Send in your email app to submit it.';msg.hidden=false;}
  window.location.href=href;
 }));
 
@@ -77,6 +89,7 @@ if (packageSelect && selectedPackage) {
     'School Website': 'School / Education Website',
     'Basic Care Maintenance': 'Website Maintenance / Support',
     'School Plus Maintenance': 'Website Maintenance / Support',
+    'School Plus Care': 'Website Maintenance / Support',
     'Other website project': 'Other / Not Sure Yet'
   };
   const target = fromOldSchoolLinks[selectedPackage] || selectedPackage;
