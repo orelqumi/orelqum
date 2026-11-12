@@ -50,7 +50,7 @@ This schema uses `CREATE TABLE IF NOT EXISTS`, so it is safe to rerun on the sam
 
 - Cloudflare Dashboard → Workers & Pages → `orelqum` → Settings → Bindings.
 - Add a **D1 database** binding.
-- Variable / binding name: `ORELQUMI_DB` (exactly, including capital letters).
+- Variable / binding name: `DB` (exactly, including capital letters).
 - Database: `orelqumi-portal`.
 - Save. Do not create a different Pages project.
 

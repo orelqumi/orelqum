@@ -5,7 +5,7 @@ export async function onRequestPost({request,env}){
  const u=await actor(request,env);const denied=mustAuth(u,'customer');if(denied)return denied;
  if(!env.PAYSTACK_SECRET_KEY||!/^sk_(test|live)_/.test(env.PAYSTACK_SECRET_KEY))return fail('Paystack is not configured.',503);
  try{
-  const b=await bodyJSON(request),id=clean(b.invoice_id,80),db=env.ORELQUMI_DB;
+  const b=await bodyJSON(request),id=clean(b.invoice_id,80),db=env.DB;
   const invoice=await db.prepare("SELECT * FROM invoices WHERE id=? AND customer_id=? AND status='Unpaid'").bind(id,u.id).first();
   if(!invoice)return fail('Unpaid invoice not found.',404);
   const mode=env.PAYSTACK_SECRET_KEY.startsWith('sk_live_')?'live':'test';

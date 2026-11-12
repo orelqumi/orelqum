@@ -6,7 +6,7 @@ export async function onRequestGet({request,env}){
  const reference=clean(new URL(request.url).searchParams.get('reference'),80);
  if(!/^ORQ[A-Z0-9]{26}$/.test(reference))return fail('Invalid transaction reference.');
  try{
-  const db=env.ORELQUMI_DB,p=await db.prepare('SELECT p.*,i.customer_id,i.status invoice_status,i.invoice_number FROM payments p JOIN invoices i ON i.id=p.invoice_id WHERE p.reference=?').bind(reference).first();
+  const db=env.DB,p=await db.prepare('SELECT p.*,i.customer_id,i.status invoice_status,i.invoice_number FROM payments p JOIN invoices i ON i.id=p.invoice_id WHERE p.reference=?').bind(reference).first();
   if(!p||(u.role!=='admin'&&p.customer_id!==u.id))return fail('Payment not found.',404);
   if(p.invoice_status==='Cancelled')return fail('This invoice was cancelled; contact Orelqumi before taking further action.',409);
   const result=await fetch('https://api.paystack.co/transaction/verify/'+encodeURIComponent(reference),{headers:{Authorization:'Bearer '+env.PAYSTACK_SECRET_KEY}});

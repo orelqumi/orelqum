@@ -4,7 +4,7 @@ export async function onRequestPost({request,env}){
  if(!originOK(request))return fail('Invalid origin.',403);
  const u=await actor(request,env);const denied=mustAuth(u,'admin');if(denied)return denied;
  try{
-  const b=await bodyJSON(request),action=clean(b.action,30),db=env.ORELQUMI_DB;
+  const b=await bodyJSON(request),action=clean(b.action,30),db=env.DB;
   if(action==='customer'){
    const name=clean(b.name,100),email=clean(b.email,180).toLowerCase(),password=b.password;
    if(name.length<2||!emailOK(email)||!passwordOK(password))return fail('Provide name, email and a temporary password of at least 12 characters.');

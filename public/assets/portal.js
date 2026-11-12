@@ -14,7 +14,7 @@ const empty=text=>`<div class="portal-empty">${escape(text)}</div>`;
 function render(){
  const u=state.user,admin=u.role==='admin';$('#greeting').textContent=`Welcome, ${u.name.split(' ')[0]}.`;
  $('#role-label').textContent=admin?'ORELQUMI OWNER DASHBOARD':'ORELQUMI CLIENT DASHBOARD';$('#dashboard-subtitle').textContent=admin?'Oversee customers, active projects, approved invoices and payments.':'Track your projects, review approved invoices and confirm Paystack payments.';
- $('#admin-tab').hidden=!admin;$('#account-detail').textContent=`Signed in as ${u.name} (${u.email}). Your account role is ${u.role}.`;
+ $('#admin-tab').hidden=!admin;$('#leads-tab').hidden=!admin; if(admin)loadCRM();$('#account-detail').textContent=`Signed in as ${u.name} (${u.email}). Your account role is ${u.role}.`;
  const due=state.invoices.filter(i=>i.status==='Unpaid').reduce((s,i)=>s+i.amount_cents,0),paid=state.payments.filter(p=>p.status==='Paid').reduce((s,p)=>s+p.amount_cents,0);
  const kpis=[['Active projects',state.projects.filter(p=>p.status!=='Completed').length,'Websites in progress'],['Unpaid invoices',state.invoices.filter(i=>i.status==='Unpaid').length,'Pending customer action'],['Outstanding',money(due),'Approved invoices'],['Verified payments',money(paid),'Recorded in the portal']];
  $('#kpi-list').innerHTML=kpis.map(([l,v,n])=>`<article class="portal-kpi"><span class="kpi-label">${l}</span><strong>${escape(v)}</strong><small>${n}</small></article>`).join('');
@@ -39,5 +39,34 @@ $('#payment-list').addEventListener('click',async e=>{const b=e.target.closest('
 for(const [selector,action] of [['#customer-form','customer'],['#project-form','project'],['#invoice-form','invoice'],['#project-update-form','project_update']]){const f=$(selector);f.addEventListener('submit',async e=>{e.preventDefault();const b=f.querySelector('button');b.disabled=true;const data={action,...Object.fromEntries(new FormData(f))};try{await api('manage',data);f.reset();notify(action==='customer'?'Customer created. Share their temporary password privately and ask them to change it at first sign-in.':'Saved successfully.');await load()}catch(err){notify(err.message,true)}finally{b.disabled=false}})}
 $('#password-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget;try{await api('change-password',Object.fromEntries(new FormData(f)));alert('Password updated. Please sign in again.');location.replace('dashboard-login.html')}catch(err){notify(err.message,true)}});
 const search=new URLSearchParams(location.search);if(search.has('payment')){const reference=search.get('payment');if(reference&&/^ORQ[A-Z0-9]{26}$/.test(reference)){api('verify?reference='+encodeURIComponent(reference)).then(r=>notify(r.confirmed?`Payment verified by Paystack: ${r.invoice_number} — ${money(r.amount_kes*100)} (${r.mode}).`:`Payment status: ${r.status}. No successful payment confirmed yet.`)).then(load).catch(err=>notify(err.message,true));history.replaceState(null,'','dashboard.html')}}
+// PRIVATE OWNER CRM — Leads remain separate from paying portal customer accounts.
+let crmLeads=[];
+async function loadCRM(){
+ try {const data=await api('leads');crmLeads=data.leads||[];renderCRM();}
+ catch(err){const target=$('#crm-list');if(target)target.innerHTML=empty('Client enquiry storage is not configured yet. Run the CRM D1 migration.');}
+}
+function renderCRM(){
+ const target=$('#crm-list');if(!target)return;
+ const filter=$('#crm-filter').value;
+ const shown=crmLeads.filter(x=>filter==='All'||x.status===filter);
+ const count=(s)=>crmLeads.filter(x=>x.status===s).length;
+ $('#crm-kpis').innerHTML=[['Total enquiries',crmLeads.length],['New',count('New')],['Won',count('Won')],['Cancelled',count('Cancelled')]].map(([label,num])=>`<div class="crm-stat"><span>${label}</span><strong>${num}</strong></div>`).join('');
+ target.innerHTML=shown.length?`<table class="portal-table"><thead><tr><th>Customer</th><th>Phone / email</th><th>Website requested</th><th>Source</th><th>Status</th><th>Budget</th><th>Cancelled / reason</th><th>Added</th></tr></thead><tbody>${shown.map(c=>`<tr><td><strong>${escape(c.full_name)}</strong></td><td>${escape(c.phone||'—')}<br><small>${escape(c.email||'')}</small></td><td>${escape(c.website_type)}</td><td>${escape(c.source)}</td><td>${pill(c.status)}</td><td>${c.budget_kes!==null?'KSh '+Number(c.budget_kes).toLocaleString('en-KE'):'—'}</td><td>${escape(c.status==='Cancelled'?c.cancellation_reason:'—')}</td><td>${escape(c.created_at)}</td></tr>`).join('')}</tbody></table>`:empty('No enquiries in this status. Add a customer lead below.');
+ const select=$('#crm-lead-select'),previous=select.value;
+ select.innerHTML='<option value="">Choose a customer</option>'+crmLeads.map(c=>`<option value="${escape(c.id)}">${escape(c.full_name)} — ${escape(c.website_type)}</option>`).join('');
+ select.value=previous;if(!select.value){$('#crm-update-form').reset();}
+}
+const crmFilter=$('#crm-filter');if(crmFilter)crmFilter.addEventListener('change',renderCRM);
+const crmSelect=$('#crm-lead-select');if(crmSelect)crmSelect.addEventListener('change',()=>{const x=crmLeads.find(y=>y.id===crmSelect.value);if(!x)return;$('#crm-status').value=x.status;$('#crm-cancel-reason').value=x.cancellation_reason;$('#crm-notes').value=x.notes;});
+const crmCreate=$('#crm-create-form');if(crmCreate)crmCreate.addEventListener('submit',async e=>{e.preventDefault();const b=crmCreate.querySelector('button');b.disabled=true;try{const data={action:'create',...Object.fromEntries(new FormData(crmCreate))};await api('leads',data);crmCreate.reset();notify('Enquiry saved to your private Orelqumi client list.');await loadCRM();}catch(err){notify(err.message,true)}finally{b.disabled=false}});
+const crmUpdate=$('#crm-update-form');if(crmUpdate)crmUpdate.addEventListener('submit',async e=>{e.preventDefault();const b=crmUpdate.querySelector('button');b.disabled=true;try{const data={action:'update',...Object.fromEntries(new FormData(crmUpdate)),mark_contacted:!!crmUpdate.elements.mark_contacted.checked};await api('leads',data);notify('Customer status updated.');await loadCRM();}catch(err){notify(err.message,true)}finally{b.disabled=false}});
+const crmExport=$('#crm-export');if(crmExport)crmExport.addEventListener('click',()=>{
+ const cols=['Full name','Phone','Email','Website type','Lead source','Budget KES','Status','Cancellation reason','Notes','Last contacted','Created'];
+ const safe=v=>{let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
+ const rows=crmLeads.map(x=>[x.full_name,x.phone,x.email,x.website_type,x.source,x.budget_kes,x.status,x.cancellation_reason,x.notes,x.last_contacted_at,x.created_at]);
+ const csv=[cols,...rows].map(r=>r.map(safe).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));
+ const a=document.createElement('a');a.href=url;a.download='Orelqumi_Private_Enquiries.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+});
+
 load();
 })();
