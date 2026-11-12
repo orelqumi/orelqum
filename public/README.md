@@ -66,3 +66,6 @@ The quotation form now offers 18 broad project categories. School websites are a
 
 ## Broad website pricing update
 New `website-pricing.html` catalogues different website categories with indicative KES starting rates. Home links to catalogue. Quote form shows live starting price for selected website category and KES budget ranges. These are suggested offers, not validated market prices or automatic final quotations. All pricing requires confirmation of scope before sale.
+
+## Client portal update (2026-11-12)
+See `../START-HERE-CLIENT-PORTAL.md` for D1 setup, owner login, project management, secure invoice payments and Paystack testing. All portal state is stored server-side in Cloudflare D1. Do not attempt to use the dashboard without D1 configured and the admin created. Legacy free-form invoice payments are intentionally disabled.
