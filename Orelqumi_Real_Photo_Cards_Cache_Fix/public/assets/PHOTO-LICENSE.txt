@@ -1,0 +1,14 @@
+Photo provider: Unsplash (https://unsplash.com/license)
+Image delivery: remote images.unsplash.com URLs referenced in pages.
+Copyright license: free commercial and non-commercial use under Unsplash License; review image-level rights, model/property releases and third-party trademarks.
+Attribution: Unsplash, included in footer.
+No photos are bundled with this project.
+
+
+Homepage service-card photographs (loaded directly from Unsplash CDN; not AI illustrations):
+- Business / collaboration: https://unsplash.com/photos/search?query=business-meeting  (photo-1521737711867-e3b97375f902)
+- Retail / online stores: https://unsplash.com/photos/search?query=boutique (photo-1441986300917-64674bd600d8)
+- Portfolio / workspace: https://unsplash.com/photos/search?query=creative-office (photo-1497366811353-6870744d04b2)
+- Schools / university campus: https://unsplash.com/photos/search?query=university-campus (photo-1541339907198-e08756dedf3f)
+The photographs are third-party images fetched from images.unsplash.com when online, not bundled in this lightweight ZIP.
+Review Unsplash licensing terms and replace with owned/licensed brand photos as needed.

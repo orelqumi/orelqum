@@ -1,0 +1,60 @@
+ORELQUMI TECHNOLOGIES — PREMIUM RESPONSIVE UPDATE (13 NOV 2026)
+================================================================
+
+THIS IS THE COMPLETE WEBSITE PACKAGE, NOT ONLY AN IMAGE OR THE HOMEPAGE.
+
+WHAT CHANGED
+- New public/assets/responsive-premium.css loaded after existing styles on all public web pages.
+- New public/assets/portal-responsive.css loaded on the private dashboard/login pages.
+- Cleaner mobile/tablet navigation, shorter vertical spacing, responsive hero and service blocks.
+- Mobile-friendly pricing cards, quote forms, calculator, CTA, footer and private CRM dashboard.
+- Improved phone-friendly tap targets, safe wrapping, viewport scaling and reduced-motion handling.
+- Homepage heading is now visitor-facing, without design-process language.
+- Existing services, academy, pricing, Paystack, D1 CRM and Google verification code retained.
+
+QUICK FILE CHECK
+After extracting the ZIP, you should see:
+    public/index.html
+    public/assets/style.css
+    public/assets/responsive-premium.css
+    public/assets/portal.css
+    public/assets/portal-responsive.css
+    functions/api/...
+    db/schema.sql
+    wrangler.json
+    DEPLOY-ORELQUMI.cmd
+
+GITHUB UPLOAD
+1. Extract the ZIP; do NOT upload only the ZIP file to the repository.
+2. Open https://github.com/orelqumi/orelqum
+3. Upload the extracted public/, functions/, db/ and wrangler.json files into the repository root,
+   replacing matching files. The CSS files are new and must also be included.
+4. Commit the changes.
+
+IMPORTANT: GitHub Pages can display static content, but will not run Cloudflare Pages
+Functions, D1 customer storage or server-side Paystack APIs. The production CRM/payment
+site must be deployed on Cloudflare Pages, not only GitHub Pages.
+
+CLOUDFLARE DEPLOYMENT — EXISTING PROJECT
+1. Keep the existing Cloudflare Pages project named orelqum.
+2. Extract this ZIP to a Windows folder.
+3. Double-click DEPLOY-ORELQUMI.cmd and follow the confirmation prompts, or open CMD
+   in the extracted folder and run:
+       wrangler pages deploy public --project-name orelqum --branch main
+4. Confirm the latest deployment and open https://orelqum.pages.dev/
+5. Refresh using Ctrl+Shift+R if a previous stylesheet is cached.
+
+DATABASE / PAYSTACK
+- Cloudflare D1 database: orelqumi-portal
+- Wrangler binding name: DB (declared in wrangler.json)
+- Keep PAYSTACK_SECRET_KEY as an encrypted Cloudflare secret.
+- No customer information or API secret keys should be committed to GitHub.
+- Do not rerun db/schema.sql on an existing populated database without reviewing the schema.
+- Verify the administrator login, private CRM and Paystack TEST checkout after deployment.
+
+IMPORTANT LIMITS
+The changes were checked for local HTML links and JavaScript syntax, but a full hosted
+browser/rendering test could not be completed in this environment. Website contact forms
+may still require a configured business email and/or secure backend integration. The public
+quote form does not automatically save leads into the CRM. Do not accept live Paystack
+payments until invoice verification and account compliance have been reviewed.

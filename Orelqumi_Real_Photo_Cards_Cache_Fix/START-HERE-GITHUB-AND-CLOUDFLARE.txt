@@ -1,0 +1,49 @@
+ORELQUMI TECHNOLOGIES — GITHUB + CLOUDFLARE DEPLOYMENT
+=======================================================
+
+THIS PACKAGE IS FOR YOUR EXISTING PROJECT:
+Cloudflare Pages: orelqum (orelqum.pages.dev)
+GitHub repository: orelqumi/orelqum
+D1 database: orelqumi-portal
+Binding: DB
+
+WHAT HAS BEEN FIXED
+- CRM JavaScript uses env.DB everywhere.
+- wrangler.json automatically binds DB to your EXISTING database ID.
+- No new database is created and no database tables are deleted.
+- Public website, private dashboard functions and Paystack test checkout are retained.
+
+IMPORTANT: uploading files to GitHub does NOT by itself deploy them to your existing Cloudflare Pages site if it is configured for direct uploads. These are separate steps.
+
+A. EXTRACT + UPLOAD TO GITHUB
+1. Download this ZIP, right click > Extract All.
+2. Open the extracted folder. It contains public, functions, db, wrangler.json, etc.
+3. In your GitHub repository orelqumi/orelqum, upload the FILES AND FOLDERS INSIDE the extracted folder, not the ZIP itself or its parent folder.
+4. Commit the changes. This updates your repository. Do not put customer data or any secret keys in GitHub.
+
+B. ACTIVATE THE SITE ON CLOUDFLARE
+1. From the extracted folder, double-click DEPLOY-ORELQUMI.cmd, read its confirmation and choose Y.
+   OR in Command Prompt from this exact folder run:
+   wrangler pages deploy public --project-name orelqum --branch main
+2. The wrangler.json file (in the same folder as public/) configures the existing D1 database binding automatically on deployment. This avoids the locked Cloudflare dashboard field.
+3. If Wrangler asks you to log in, run wrangler login and authorise.
+4. See Cloudflare Deployments for 'Deployment complete'.
+5. In Cloudflare Settings check the PAYSTACK_SECRET_KEY secret is still present. Never publish any test or live API keys.
+
+C. SET UP THE OWNER DASHBOARD (ONE TIME ONLY)
+The D1 schema was already imported from db/schema.sql in your earlier steps; DO NOT run it again unnecessarily.
+For first-time admin account creation the owner portal needs a protected one-time secret named ORELQUMI_SETUP_KEY (random 24+ characters) in Cloudflare Pages Settings > Variables and Secrets, type Secret. Redeploy after adding the secret. Visit https://orelqum.pages.dev/dashboard-setup.html and use your private setup key to create your administrator.
+Delete the setup secret from Cloudflare and redeploy after creating the owner account. Never put it in GitHub or send it in a chat.
+If you already have an owner account, do not create another; use https://orelqum.pages.dev/dashboard-login.html.
+
+D. TEST
+- https://orelqum.pages.dev/ should open the homepage.
+- https://orelqum.pages.dev/dashboard-login.html should open login.
+- The private owner dashboard should show enquiries and cancellations after login.
+- Paystack remains in test mode until full security/compliance review.
+
+SECURITY NOTES
+- Paystack secret remains in Cloudflare's encrypted secrets. This ZIP does not contain any Paystack secret.
+- Do not publish this ZIP as an extracted website under GitHub Pages: GitHub Pages is static-only and cannot run Cloudflare Pages Functions or the D1-backed CRM.
+- A successful deploy is not proof of secure production readiness; test owner access, customer isolation, invoice payment verification and login safeguards before storing real client details or accepting live payments.
+- Cloudflare recommends reviewing existing project settings before switching to a Wrangler config as source of truth. If any deployment settings differ, inspect Settings and revise the configuration before deploying.

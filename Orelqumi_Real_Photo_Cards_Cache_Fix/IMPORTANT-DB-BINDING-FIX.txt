@@ -1,0 +1,10 @@
+Orelqumi CRM binding correction
+
+This version uses the EXISTING D1 Pages binding named DB, connected to the database orelqumi-portal. There is no need to rename or remove your DB binding.
+
+Before deploying: confirm that the Production Pages binding DB points to orelqumi-portal and that db/schema.sql and db/crm-migration.sql have been applied as instructed.
+
+In Windows File Explorer, open this extracted folder (containing public and functions), press Alt+D, enter cmd, press Enter. Then enter:
+wrangler pages deploy public --project-name orelqum --branch main
+
+Keep the existing PAYSTACK_SECRET_KEY set as an encrypted secret. Confirm setup through dashboard-setup.html only after database setup. Do not place passwords or secret keys in ZIPs or GitHub.
