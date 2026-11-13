@@ -1,28 +1,28 @@
-/* ORELQUMI — noticeably moving across public pages. Version 20261113-visible. */
-:root{--orelq-motion-time:.32s;--orelq-motion-ease:cubic-bezier(.22,1,.36,1)}
+/* ORELQUMI — noticeably moving across public pages. Version 20261113-balanced. */
+:root{--orelq-motion-time:.38s;--orelq-motion-ease:cubic-bezier(.22,1,.36,1)}
 /* Reveal when a card enters the visible area; all remaining movement is continuous. */
-html.orelq-motion-ready .orelq-motion-item{opacity:0;transform:translate3d(0,20px,0);transition:opacity .32s ease,transform .32s var(--orelq-motion-ease),box-shadow .25s ease,border-color .25s ease;transition-delay:var(--orelq-stagger,0ms)}
+html.orelq-motion-ready .orelq-motion-item{opacity:0;transform:translate3d(0,20px,0);transition:opacity .38s ease,transform .38s var(--orelq-motion-ease),box-shadow .30s ease,border-color .30s ease;transition-delay:var(--orelq-stagger,0ms)}
 html.orelq-motion-ready .orelq-motion-item.orelq-in-view{opacity:1;transform:translate3d(0,0,0)}
 /* Modern browsers: individual translate keeps the entrance transform independent. */
 @supports(translate:0 1px){
- html.orelq-motion-ready .orelq-motion-card.orelq-in-view{animation:orelq-visible-bounce 1.6s ease-in-out infinite!important;animation-delay:calc(.32s + var(--orelq-phase,0ms))!important;}
- html.orelq-motion-ready .orelq-motion-card.orelq-in-view:nth-child(even){animation-duration:1.85s!important}
+ html.orelq-motion-ready .orelq-motion-card.orelq-in-view{animation:orelq-visible-bounce 1.9s ease-in-out infinite!important;animation-delay:calc(.38s + var(--orelq-phase,0ms))!important;}
+ html.orelq-motion-ready .orelq-motion-card.orelq-in-view:nth-child(even){animation-duration:2.2s!important}
  html.orelq-motion-ready .orelq-motion-card:hover,html.orelq-motion-ready .orelq-motion-card:focus-within{animation-play-state:paused!important;translate:0 -5px}
  @keyframes orelq-visible-bounce{0%,100%{translate:0 0}50%{translate:0 -13px}}
 }
 /* Photos float inside their frames: a visible, premium zoom-and-drift. */
 .editorial-home .e-service-photo{overflow:hidden}
-.editorial-home .e-service-photo img,.orelq-motion-card img:not([src*="logo"]){transform-origin:50% 50%;animation:orelq-photo-drift 2.65s ease-in-out infinite alternate!important;animation-delay:var(--orelq-phase,0ms)!important}
+.editorial-home .e-service-photo img,.orelq-motion-card img:not([src*="logo"]){transform-origin:50% 50%;animation:orelq-photo-drift 3.15s ease-in-out infinite alternate!important;animation-delay:var(--orelq-phase,0ms)!important}
 @keyframes orelq-photo-drift{0%{scale:1;translate:0 0}100%{scale:1.09;translate:0 -7px}}
 /* Hero visual and large previews should not seem motionless. */
-.editorial-home .e-preview-frame{animation-duration:2.25s!important}
-.editorial-home .e-showcase-large .e-mock-browser{animation-duration:2.1s!important}
-.editorial-home .e-showcase:not(.e-showcase-large) .e-mock-browser{animation-duration:2.3s!important}
+.editorial-home .e-preview-frame{animation-duration:2.30s!important}
+.editorial-home .e-showcase-large .e-mock-browser{animation-duration:2.5s!important}
+.editorial-home .e-showcase:not(.e-showcase-large) .e-mock-browser{animation-duration:2.75s!important}
 /* Section headings move slightly without leaving their text containers. */
-html.orelq-motion-ready .orelq-motion-title{animation:orelq-heading-shift 2.1s ease-in-out infinite alternate;}
+html.orelq-motion-ready .orelq-motion-title{animation:orelq-heading-shift 2.5s ease-in-out infinite alternate;}
 @keyframes orelq-heading-shift{0%{translate:0 0}100%{translate:0 -5px}}
 /* Subtle highlight cycling on badges / icons gives the site motion even when scrolled to a section without cards. */
-html.orelq-motion-ready .e-service-symbol,html.orelq-motion-ready .iconbox{animation:orelq-icon-pulse 1.7s ease-in-out infinite alternate}
+html.orelq-motion-ready .e-service-symbol,html.orelq-motion-ready .iconbox{animation:orelq-icon-pulse 2s ease-in-out infinite alternate}
 @keyframes orelq-icon-pulse{0%{scale:1}100%{scale:1.12}}
 /* Mobile: visible but less travel; never displace forms or block links. */
 @media(max-width:700px){
