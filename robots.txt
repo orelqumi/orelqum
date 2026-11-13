@@ -1,5 +1,6 @@
 User-agent: *
-Allow: /
+Disallow: /dashboard.html
+Disallow: /dashboard-login.html
+Disallow: /dashboard-setup.html
 Disallow: /api/
-
 Sitemap: https://orelqum.pages.dev/sitemap.xml

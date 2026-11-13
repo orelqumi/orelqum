@@ -1,0 +1,72 @@
+(()=>{'use strict';
+const $=s=>document.querySelector(s),money=v=>new Intl.NumberFormat('en-KE',{style:'currency',currency:'KES',maximumFractionDigits:2}).format((Number(v)||0)/100);
+const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const notify=(msg,error=false)=>{const box=$('#dashboard-message')||$('#login-message');if(!box)return;box.hidden=false;box.className='portal-message'+(error?' error':'');box.textContent=msg;box.scrollIntoView({behavior:'smooth',block:'nearest'});};
+async function api(path,data){const response=await fetch('/api/portal/'+path,{method:data?'POST':'GET',headers:data?{'content-type':'application/json'}:{},body:data?JSON.stringify(data):undefined,credentials:'same-origin',cache:'no-store'});let result={};try{result=await response.json()}catch{}if(!response.ok)throw Error(result.error||'Request failed.');return result}
+const value=(form,name)=>form.elements[name]?.value?.trim()??'';
+const login=$('#login-form');if(login)login.addEventListener('submit',async e=>{e.preventDefault();const b=login.querySelector('button');b.disabled=true;try{await api('login',{email:$('#email').value,password:$('#password').value});location.assign('dashboard.html');}catch(err){notify(err.message,true)}finally{b.disabled=false}});
+const setup=$('#setup-form');if(setup)setup.addEventListener('submit',async e=>{e.preventDefault();const b=setup.querySelector('button');b.disabled=true;try{await api('setup',Object.fromEntries(new FormData(setup)));location.assign('dashboard.html')}catch(err){notify(err.message,true)}finally{b.disabled=false}});
+const shell=$('#portal-dashboard');if(!shell)return;
+let state={user:null,clients:[],projects:[],invoices:[],payments:[]};
+async function load(){try{state=await api('overview');shell.hidden=false;$('#loading-message').hidden=true;render();}catch(err){if(/sign in/i.test(err.message))location.replace('dashboard-login.html');else{$('#loading-message').querySelector('h1').textContent='Dashboard needs attention';$('#loading-message').querySelector('p').textContent=err.message}}}
+const pill=(status)=>`<span class="portal-pill ${['Paid','Completed','Design','Development'].includes(status)?'':['Unpaid','Pending','Review'].includes(status)?'orange':'gray'}">${escape(status)}</span>`;
+const empty=text=>`<div class="portal-empty">${escape(text)}</div>`;
+function render(){
+ const u=state.user,admin=u.role==='admin';$('#greeting').textContent=`Welcome, ${u.name.split(' ')[0]}.`;
+ $('#role-label').textContent=admin?'ORELQUMI OWNER DASHBOARD':'ORELQUMI CLIENT DASHBOARD';$('#dashboard-subtitle').textContent=admin?'Oversee customers, active projects, approved invoices and payments.':'Track your projects, review approved invoices and confirm Paystack payments.';
+ $('#admin-tab').hidden=!admin;$('#leads-tab').hidden=!admin; if(admin)loadCRM();$('#account-detail').textContent=`Signed in as ${u.name} (${u.email}). Your account role is ${u.role}.`;
+ const due=state.invoices.filter(i=>i.status==='Unpaid').reduce((s,i)=>s+i.amount_cents,0),paid=state.payments.filter(p=>p.status==='Paid').reduce((s,p)=>s+p.amount_cents,0);
+ const kpis=[['Active projects',state.projects.filter(p=>p.status!=='Completed').length,'Websites in progress'],['Unpaid invoices',state.invoices.filter(i=>i.status==='Unpaid').length,'Pending customer action'],['Outstanding',money(due),'Approved invoices'],['Verified payments',money(paid),'Recorded in the portal']];
+ $('#kpi-list').innerHTML=kpis.map(([l,v,n])=>`<article class="portal-kpi"><span class="kpi-label">${l}</span><strong>${escape(v)}</strong><small>${n}</small></article>`).join('');
+ $('#project-list').innerHTML=state.projects.length?state.projects.map(p=>`<article class="portal-item"><div class="portal-item-top"><div><h3>${escape(p.title)}</h3><span class="portal-muted">${escape(p.category)}${admin?' · '+escape(p.customer_name):''}</span></div>${pill(p.status)}</div><div class="portal-progress" aria-label="${p.progress}% complete"><i style="width:${Math.min(100,Math.max(0,p.progress))}%"></i></div><span class="portal-muted">${p.progress}% progress · Updated ${escape(p.updated_at)}</span><p>${escape(p.description||'Your project details will appear here as Orelqumi posts updates.')}</p></article>`).join(''):empty('Your active website projects will appear here after Orelqumi creates them.');
+ $('#invoice-list').innerHTML=state.invoices.length?`<table class="portal-table"><thead><tr><th>Invoice</th><th>Client / service</th><th>Amount</th><th>Status</th><th>Due date</th><th>Action</th></tr></thead><tbody>${state.invoices.map(i=>`<tr><td><strong>${escape(i.invoice_number)}</strong></td><td>${admin?escape(i.customer_name)+' · ':''}${escape(i.description)}</td><td>${money(i.amount_cents)}</td><td>${pill(i.status)}</td><td>${escape(i.due_date||'—')}</td><td>${!admin&&i.status==='Unpaid'?`<button class="portal-button small" data-pay="${escape(i.id)}">Pay with Paystack</button>`:admin&&i.status==='Unpaid'?`<button class="portal-button small danger" data-cancel="${escape(i.id)}">Cancel</button>`:'—'}</td></tr>`).join('')}</tbody></table>`:empty('No approved invoices yet.');
+ $('#payment-list').innerHTML=state.payments.length?`<table class="portal-table"><thead><tr><th>Invoice</th><th>Reference</th><th>Amount</th><th>Mode</th><th>Status</th><th>Action</th></tr></thead><tbody>${state.payments.map(p=>`<tr><td>${escape(p.invoice_number)}</td><td class="portal-muted">${escape(p.reference)}</td><td>${money(p.amount_cents)}</td><td>${escape(p.mode)}</td><td>${pill(p.status)}</td><td><button class="portal-button secondary small" data-verify="${escape(p.reference)}">Verify with Paystack</button></td></tr>`).join('')}</tbody></table>`:empty('Payment history will appear here after the first checkout.');
+ if(admin){
+  $('#customer-list').innerHTML=state.clients.length?`<table class="portal-table"><thead><tr><th>Customer</th><th>Email</th><th>Created</th></tr></thead><tbody>${state.clients.map(c=>`<tr><td>${escape(c.name)}</td><td>${escape(c.email)}</td><td>${escape(c.created_at)}</td></tr>`).join('')}</tbody></table>`:empty('Create your first client account above.');
+  const custOpt='<option value="">Choose customer</option>'+state.clients.map(c=>`<option value="${escape(c.id)}">${escape(c.name)} — ${escape(c.email)}</option>`).join('');
+  document.querySelectorAll('.customer-picker').forEach(s=>{const selected=s.value;s.innerHTML=custOpt;s.value=selected;});
+  const invoiceProject=$('#invoice-project'),chosen=invoiceProject.value;invoiceProject.innerHTML='<option value="">No linked project</option>'+state.projects.map(p=>`<option value="${escape(p.id)}">${escape(p.title)}</option>`).join('');invoiceProject.value=chosen;
+  const updateProject=$('#update-project'),current=updateProject.value;updateProject.innerHTML='<option value="">Select project</option>'+state.projects.map(p=>`<option value="${escape(p.id)}">${escape(p.title)} — ${escape(p.customer_name)}</option>`).join('');updateProject.value=current;
+ }
+}
+$('.portal-tabs').addEventListener('click',e=>{const button=e.target.closest('[data-tab]');if(!button)return;document.querySelectorAll('.portal-tab').forEach(b=>b.classList.toggle('active',b===button));document.querySelectorAll('.portal-section').forEach(s=>s.classList.toggle('active',s.dataset.section===button.dataset.tab));});
+$('#refresh-data').addEventListener('click',load);
+$('#logout').addEventListener('click',async()=>{try{await api('logout',{})}catch{}location.replace('dashboard-login.html')});
+$('#invoice-list').addEventListener('click',async e=>{const b=e.target.closest('[data-pay],[data-cancel]');if(!b)return;b.disabled=true;
+ try{if(b.dataset.pay){const response=await api('pay',{invoice_id:b.dataset.pay});if(response.mode==='live'&&!confirm(`LIVE PAYMENT: Pay ${money(response.amount_kes*100)} to Orelqumi using Paystack?`))return;location.assign(response.checkout_url)}else if(b.dataset.cancel){if(!confirm('Cancel this unpaid invoice?'))return;await api('manage',{action:'cancel_invoice',invoice_id:b.dataset.cancel});notify('Invoice cancelled.');await load()}}catch(err){notify(err.message,true)}finally{b.disabled=false}
+});
+$('#payment-list').addEventListener('click',async e=>{const b=e.target.closest('[data-verify]');if(!b)return;b.disabled=true;try{const r=await api('verify?reference='+encodeURIComponent(b.dataset.verify));notify(r.confirmed?`Verified ${r.invoice_number}: ${money(r.amount_kes*100)} (${r.mode} mode).`:`Paystack status: ${r.status}. No payment confirmed.`);await load()}catch(err){notify(err.message,true)}finally{b.disabled=false}});
+for(const [selector,action] of [['#customer-form','customer'],['#project-form','project'],['#invoice-form','invoice'],['#project-update-form','project_update']]){const f=$(selector);f.addEventListener('submit',async e=>{e.preventDefault();const b=f.querySelector('button');b.disabled=true;const data={action,...Object.fromEntries(new FormData(f))};try{await api('manage',data);f.reset();notify(action==='customer'?'Customer created. Share their temporary password privately and ask them to change it at first sign-in.':'Saved successfully.');await load()}catch(err){notify(err.message,true)}finally{b.disabled=false}})}
+$('#password-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget;try{await api('change-password',Object.fromEntries(new FormData(f)));alert('Password updated. Please sign in again.');location.replace('dashboard-login.html')}catch(err){notify(err.message,true)}});
+const search=new URLSearchParams(location.search);if(search.has('payment')){const reference=search.get('payment');if(reference&&/^ORQ[A-Z0-9]{26}$/.test(reference)){api('verify?reference='+encodeURIComponent(reference)).then(r=>notify(r.confirmed?`Payment verified by Paystack: ${r.invoice_number} — ${money(r.amount_kes*100)} (${r.mode}).`:`Payment status: ${r.status}. No successful payment confirmed yet.`)).then(load).catch(err=>notify(err.message,true));history.replaceState(null,'','dashboard.html')}}
+// PRIVATE OWNER CRM — Leads remain separate from paying portal customer accounts.
+let crmLeads=[];
+async function loadCRM(){
+ try {const data=await api('leads');crmLeads=data.leads||[];renderCRM();}
+ catch(err){const target=$('#crm-list');if(target)target.innerHTML=empty('Client enquiry storage is not configured yet. Run the CRM D1 migration.');}
+}
+function renderCRM(){
+ const target=$('#crm-list');if(!target)return;
+ const filter=$('#crm-filter').value;
+ const shown=crmLeads.filter(x=>filter==='All'||x.status===filter);
+ const count=(s)=>crmLeads.filter(x=>x.status===s).length;
+ $('#crm-kpis').innerHTML=[['Total enquiries',crmLeads.length],['New',count('New')],['Won',count('Won')],['Cancelled',count('Cancelled')]].map(([label,num])=>`<div class="crm-stat"><span>${label}</span><strong>${num}</strong></div>`).join('');
+ target.innerHTML=shown.length?`<table class="portal-table"><thead><tr><th>Customer</th><th>Phone / email</th><th>Website requested</th><th>Source</th><th>Status</th><th>Budget</th><th>Cancelled / reason</th><th>Added</th></tr></thead><tbody>${shown.map(c=>`<tr><td><strong>${escape(c.full_name)}</strong></td><td>${escape(c.phone||'—')}<br><small>${escape(c.email||'')}</small></td><td>${escape(c.website_type)}</td><td>${escape(c.source)}</td><td>${pill(c.status)}</td><td>${c.budget_kes!==null?'KSh '+Number(c.budget_kes).toLocaleString('en-KE'):'—'}</td><td>${escape(c.status==='Cancelled'?c.cancellation_reason:'—')}</td><td>${escape(c.created_at)}</td></tr>`).join('')}</tbody></table>`:empty('No enquiries in this status. Add a customer lead below.');
+ const select=$('#crm-lead-select'),previous=select.value;
+ select.innerHTML='<option value="">Choose a customer</option>'+crmLeads.map(c=>`<option value="${escape(c.id)}">${escape(c.full_name)} — ${escape(c.website_type)}</option>`).join('');
+ select.value=previous;if(!select.value){$('#crm-update-form').reset();}
+}
+const crmFilter=$('#crm-filter');if(crmFilter)crmFilter.addEventListener('change',renderCRM);
+const crmSelect=$('#crm-lead-select');if(crmSelect)crmSelect.addEventListener('change',()=>{const x=crmLeads.find(y=>y.id===crmSelect.value);if(!x)return;$('#crm-status').value=x.status;$('#crm-cancel-reason').value=x.cancellation_reason;$('#crm-notes').value=x.notes;});
+const crmCreate=$('#crm-create-form');if(crmCreate)crmCreate.addEventListener('submit',async e=>{e.preventDefault();const b=crmCreate.querySelector('button');b.disabled=true;try{const data={action:'create',...Object.fromEntries(new FormData(crmCreate))};await api('leads',data);crmCreate.reset();notify('Enquiry saved to your private Orelqumi client list.');await loadCRM();}catch(err){notify(err.message,true)}finally{b.disabled=false}});
+const crmUpdate=$('#crm-update-form');if(crmUpdate)crmUpdate.addEventListener('submit',async e=>{e.preventDefault();const b=crmUpdate.querySelector('button');b.disabled=true;try{const data={action:'update',...Object.fromEntries(new FormData(crmUpdate)),mark_contacted:!!crmUpdate.elements.mark_contacted.checked};await api('leads',data);notify('Customer status updated.');await loadCRM();}catch(err){notify(err.message,true)}finally{b.disabled=false}});
+const crmExport=$('#crm-export');if(crmExport)crmExport.addEventListener('click',()=>{
+ const cols=['Full name','Phone','Email','Website type','Lead source','Budget KES','Status','Cancellation reason','Notes','Last contacted','Created'];
+ const safe=v=>{let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
+ const rows=crmLeads.map(x=>[x.full_name,x.phone,x.email,x.website_type,x.source,x.budget_kes,x.status,x.cancellation_reason,x.notes,x.last_contacted_at,x.created_at]);
+ const csv=[cols,...rows].map(r=>r.map(safe).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));
+ const a=document.createElement('a');a.href=url;a.download='Orelqumi_Private_Enquiries.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+});
+
+load();
+})();
