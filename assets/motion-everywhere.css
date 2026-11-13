@@ -1,0 +1,28 @@
+/* Orelqumi site-wide motion system | fast, subtle, accessible. */
+:root{--orelq-motion-time: .44s; --orelq-motion-ease: cubic-bezier(.22,1,.36,1)}
+/* Reveal only when scripting has successfully enabled motion. */
+html.orelq-motion-ready .orelq-motion-item{opacity:0;transform:translate3d(0,17px,0);transition:opacity var(--orelq-motion-time) ease, transform var(--orelq-motion-time) var(--orelq-motion-ease), box-shadow .23s ease, border-color .23s ease;transition-delay:var(--orelq-stagger,0ms);will-change:opacity,transform}
+html.orelq-motion-ready .orelq-motion-item.orelq-in-view{opacity:1;transform:translate3d(0,0,0);will-change:auto}
+/* Very modest continuous lift for all column cards, after their entrance completes.
+   The individual translate property does not interfere with the reveal transform. */
+@supports (translate:0 1px){
+ html.orelq-motion-ready .orelq-motion-card.orelq-in-view{animation:orelq-card-breathe 3.6s ease-in-out infinite;animation-delay:calc(var(--orelq-motion-time) + var(--orelq-stagger,0ms) + var(--orelq-phase,0ms));}
+ html.orelq-motion-ready .orelq-motion-card:hover,
+ html.orelq-motion-ready .orelq-motion-card:focus-within{animation-play-state:paused;translate:0 -3px}
+ @keyframes orelq-card-breathe{0%,100%{translate:0 0}50%{translate:0 -3px}}
+}
+/* Images feel gently alive without zooming or causing layout shifts. */
+.orelq-motion-card img{transition:scale .28s ease,filter .28s ease}
+.orelq-motion-card:hover img{scale:1.025}
+/* Existing showcase motion sped up without changing design. */
+.editorial-home .e-preview-frame{animation-duration:4.5s!important}
+.editorial-home .e-showcase-large .e-mock-browser{animation-duration:5s!important}
+.editorial-home .e-showcase:not(.e-showcase-large) .e-mock-browser{animation-duration:4.8s!important}
+.editorial-home .e-service-photo img{animation-duration:4s!important}
+/* Avoid animation on editable fields, loading states or dashboard UI. */
+@media(max-width:700px){:root{--orelq-motion-time:.38s}html.orelq-motion-ready .orelq-motion-item{transform:translate3d(0,11px,0)} }
+@media(prefers-reduced-motion:reduce){
+ html.orelq-motion-ready .orelq-motion-item{opacity:1!important;transform:none!important;transition:none!important;animation:none!important;translate:none!important}
+ .orelq-motion-card img{transition:none!important;scale:1!important}
+ .editorial-home .e-preview-frame,.editorial-home .e-mock-browser,.editorial-home .e-service-photo img{animation:none!important}
+}

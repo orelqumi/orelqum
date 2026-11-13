@@ -1,0 +1,19 @@
+ORELQUMI — ALL PAGES FASTER SMOOTH MOTION
+
+WHAT CHANGED
+- Across 15 public website pages, animated entrances for repeated cards and columns.
+- Cards have very subtle floating motion (3.6-second cycles, about 3px).
+- Showcase/photograph animations are faster, with smooth transitions.
+- Phones get quicker, lighter entrances.
+- Respects reduced-motion accessibility preference.
+- Core layout, photos, pricing and navigation are unchanged.
+
+GITHUB PAGES
+1. Extract the ZIP.
+2. Upload the CONTENTS of this folder into the ROOT of your orelqumi/orelqum GitHub repository on main.
+3. Confirm index.html is directly at the root (not inside public or another folder).
+4. Commit changes.
+5. Open https://orelqumi.github.io/orelqum/ in a fresh tab after deployment.
+
+NOTE
+GitHub Pages is static. It cannot execute Cloudflare Pages Functions, D1 database or Paystack secret-backed endpoints. Continue using Cloudflare for payments and CRM.
