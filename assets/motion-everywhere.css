@@ -1,28 +1,37 @@
-/* Orelqumi site-wide motion system | fast, subtle, accessible. */
-:root{--orelq-motion-time: .44s; --orelq-motion-ease: cubic-bezier(.22,1,.36,1)}
-/* Reveal only when scripting has successfully enabled motion. */
-html.orelq-motion-ready .orelq-motion-item{opacity:0;transform:translate3d(0,17px,0);transition:opacity var(--orelq-motion-time) ease, transform var(--orelq-motion-time) var(--orelq-motion-ease), box-shadow .23s ease, border-color .23s ease;transition-delay:var(--orelq-stagger,0ms);will-change:opacity,transform}
-html.orelq-motion-ready .orelq-motion-item.orelq-in-view{opacity:1;transform:translate3d(0,0,0);will-change:auto}
-/* Very modest continuous lift for all column cards, after their entrance completes.
-   The individual translate property does not interfere with the reveal transform. */
-@supports (translate:0 1px){
- html.orelq-motion-ready .orelq-motion-card.orelq-in-view{animation:orelq-card-breathe 3.6s ease-in-out infinite;animation-delay:calc(var(--orelq-motion-time) + var(--orelq-stagger,0ms) + var(--orelq-phase,0ms));}
- html.orelq-motion-ready .orelq-motion-card:hover,
- html.orelq-motion-ready .orelq-motion-card:focus-within{animation-play-state:paused;translate:0 -3px}
- @keyframes orelq-card-breathe{0%,100%{translate:0 0}50%{translate:0 -3px}}
+/* ORELQUMI — noticeably moving across public pages. Version 20261113-visible. */
+:root{--orelq-motion-time:.32s;--orelq-motion-ease:cubic-bezier(.22,1,.36,1)}
+/* Reveal when a card enters the visible area; all remaining movement is continuous. */
+html.orelq-motion-ready .orelq-motion-item{opacity:0;transform:translate3d(0,20px,0);transition:opacity .32s ease,transform .32s var(--orelq-motion-ease),box-shadow .25s ease,border-color .25s ease;transition-delay:var(--orelq-stagger,0ms)}
+html.orelq-motion-ready .orelq-motion-item.orelq-in-view{opacity:1;transform:translate3d(0,0,0)}
+/* Modern browsers: individual translate keeps the entrance transform independent. */
+@supports(translate:0 1px){
+ html.orelq-motion-ready .orelq-motion-card.orelq-in-view{animation:orelq-visible-bounce 1.6s ease-in-out infinite!important;animation-delay:calc(.32s + var(--orelq-phase,0ms))!important;}
+ html.orelq-motion-ready .orelq-motion-card.orelq-in-view:nth-child(even){animation-duration:1.85s!important}
+ html.orelq-motion-ready .orelq-motion-card:hover,html.orelq-motion-ready .orelq-motion-card:focus-within{animation-play-state:paused!important;translate:0 -5px}
+ @keyframes orelq-visible-bounce{0%,100%{translate:0 0}50%{translate:0 -13px}}
 }
-/* Images feel gently alive without zooming or causing layout shifts. */
-.orelq-motion-card img{transition:scale .28s ease,filter .28s ease}
-.orelq-motion-card:hover img{scale:1.025}
-/* Existing showcase motion sped up without changing design. */
-.editorial-home .e-preview-frame{animation-duration:4.5s!important}
-.editorial-home .e-showcase-large .e-mock-browser{animation-duration:5s!important}
-.editorial-home .e-showcase:not(.e-showcase-large) .e-mock-browser{animation-duration:4.8s!important}
-.editorial-home .e-service-photo img{animation-duration:4s!important}
-/* Avoid animation on editable fields, loading states or dashboard UI. */
-@media(max-width:700px){:root{--orelq-motion-time:.38s}html.orelq-motion-ready .orelq-motion-item{transform:translate3d(0,11px,0)} }
+/* Photos float inside their frames: a visible, premium zoom-and-drift. */
+.editorial-home .e-service-photo{overflow:hidden}
+.editorial-home .e-service-photo img,.orelq-motion-card img:not([src*="logo"]){transform-origin:50% 50%;animation:orelq-photo-drift 2.65s ease-in-out infinite alternate!important;animation-delay:var(--orelq-phase,0ms)!important}
+@keyframes orelq-photo-drift{0%{scale:1;translate:0 0}100%{scale:1.09;translate:0 -7px}}
+/* Hero visual and large previews should not seem motionless. */
+.editorial-home .e-preview-frame{animation-duration:2.25s!important}
+.editorial-home .e-showcase-large .e-mock-browser{animation-duration:2.1s!important}
+.editorial-home .e-showcase:not(.e-showcase-large) .e-mock-browser{animation-duration:2.3s!important}
+/* Section headings move slightly without leaving their text containers. */
+html.orelq-motion-ready .orelq-motion-title{animation:orelq-heading-shift 2.1s ease-in-out infinite alternate;}
+@keyframes orelq-heading-shift{0%{translate:0 0}100%{translate:0 -5px}}
+/* Subtle highlight cycling on badges / icons gives the site motion even when scrolled to a section without cards. */
+html.orelq-motion-ready .e-service-symbol,html.orelq-motion-ready .iconbox{animation:orelq-icon-pulse 1.7s ease-in-out infinite alternate}
+@keyframes orelq-icon-pulse{0%{scale:1}100%{scale:1.12}}
+/* Mobile: visible but less travel; never displace forms or block links. */
+@media(max-width:700px){
+ @keyframes orelq-visible-bounce{0%,100%{translate:0 0}50%{translate:0 -8px}}
+ @keyframes orelq-photo-drift{0%{scale:1;translate:0 0}100%{scale:1.065;translate:0 -5px}}
+ html.orelq-motion-ready .orelq-motion-item{transform:translate3d(0,13px,0)}
+}
+/* User-requested accessibility: no motion where device requests reduced motion. */
 @media(prefers-reduced-motion:reduce){
  html.orelq-motion-ready .orelq-motion-item{opacity:1!important;transform:none!important;transition:none!important;animation:none!important;translate:none!important}
- .orelq-motion-card img{transition:none!important;scale:1!important}
- .editorial-home .e-preview-frame,.editorial-home .e-mock-browser,.editorial-home .e-service-photo img{animation:none!important}
+ html.orelq-motion-ready .orelq-motion-title,.editorial-home .e-preview-frame,.editorial-home .e-mock-browser,.editorial-home .e-service-photo img,.orelq-motion-card img,.e-service-symbol,.iconbox{animation:none!important;scale:1!important;translate:none!important}
 }

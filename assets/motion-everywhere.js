@@ -1,34 +1,36 @@
-/* Progressive enhancement: animate repeated content and cards as they enter view.
-   Do not affect forms, navigation, customer portals or calls to action. */
+/* Orelqumi visible site-wide motion — public pages only, version 20261113-visible */
 (function(){
  'use strict';
- if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- var selectors=[
-  '.e-service-card','.e-showcase','.e-price-card','.e-process-grid > *',
-  '.service-spotlight-card','.service-chip','.category-price-card',
-  '.school-price-card','.counter-card','.path-card','.image-card',
-  '.cards > .tile','.cards > .image-card','.cards > *',
-  '.price-catalog-grid > *','.service-showcase-grid > *',
-  '.school-price-grid > *','.maintenance-grid > *',
-  '.counter-grid > *','.path-grid > *','.footer-grid > *',
-  '.e-footer-top > *'
+ if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ var cardSelectors=[
+ '.e-service-card','.e-showcase','.e-price-card','.e-process-grid > *',
+ '.service-spotlight-card','.service-chip','.category-price-card','.school-price-card',
+ '.counter-card','.path-card','.image-card','.cards > *','.tile',
+ '.price-catalog-grid > *','.service-showcase-grid > *','.school-price-grid > *',
+ '.maintenance-grid > *','.counter-grid > *','.path-grid > *',
+ '.e-footer-top > *','.footer-grid > *','.course-card','.package-card',
+ '.portfolio-card','.pricing-card','.feature-card','.step-card',
+ '.split-photo','.about-photo','.photo-card'
  ];
- var nodes=Array.prototype.slice.call(document.querySelectorAll(selectors.join(','))).filter(function(el){
-   return !el.closest('header,nav,form,[aria-hidden="true"],.portal,.dashboard') &&
-     el.offsetWidth>0 && el.offsetHeight>0;
+ var cards=Array.from(new Set(document.querySelectorAll(cardSelectors.join(',')))).filter(function(el){
+  return !el.closest('header,nav,form,[aria-hidden="true"],.portal,.dashboard,.e-faq-list')&&el.getBoundingClientRect().width>0;
  });
- if(!nodes.length)return;
- // Keep existing hover functionality, hrefs, and click targets unchanged.
- nodes.forEach(function(el,idx){
-   el.classList.add('orelq-motion-item','orelq-motion-card');
-   var siblings=el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children,el):idx;
-   el.style.setProperty('--orelq-stagger',Math.min(siblings%4,3)*65+'ms');
-   el.style.setProperty('--orelq-phase',-(siblings%4)*410+'ms');
+ cards.forEach(function(el,i){
+  el.classList.add('orelq-motion-item','orelq-motion-card');
+  var idx=el.parentElement?Array.prototype.indexOf.call(el.parentElement.children,el):i;
+  el.style.setProperty('--orelq-stagger',Math.min(idx%4,3)*45+'ms');
+  el.style.setProperty('--orelq-phase',-(idx%4)*270+'ms');
  });
- if(!('IntersectionObserver' in window))return;
+ Array.from(document.querySelectorAll('main h2,main .section-heading h2,main .e-section-heading h2')).forEach(function(el){
+  if(!el.closest('form,[aria-hidden="true"],.portal,.dashboard'))el.classList.add('orelq-motion-title');
+ });
+ if(!('IntersectionObserver' in window)){
+  cards.forEach(function(el){el.classList.add('orelq-in-view')});
+  document.documentElement.classList.add('orelq-motion-ready');return;
+ }
  var observer=new IntersectionObserver(function(entries){
-   entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('orelq-in-view');observer.unobserve(entry.target);}})
- },{rootMargin:'0px 0px 28px 0px',threshold:.06});
- nodes.forEach(function(el){observer.observe(el)});
+  entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('orelq-in-view');observer.unobserve(entry.target)}});
+ },{rootMargin:'0px 0px 90px 0px',threshold:0.01});
+ cards.forEach(function(el){observer.observe(el)});
  document.documentElement.classList.add('orelq-motion-ready');
 })();
