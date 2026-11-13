@@ -1,0 +1,24 @@
+ORELQUMI REAL PHOTOS / RELIABLE VERSION UPDATE
+
+WHAT CHANGED
+- Removed the illustrated SVG cards. The four service cards now display real photography matching business, online shops, professional portfolios and institutions.
+- Preserved site navigation, pricing, CRM, Paystack, and database code.
+- Created a NEW CSS filename editorial-photo-v3.css so previously cached styles cannot override the newer homepage.
+- Set HTML pages to revalidate cache for the homepage.
+- Retained gentle motion on showcase previews. Motion is automatically reduced for users who request reduced motion.
+
+IMPORTANT: Photographs are hosted on Unsplash CDN rather than included in ZIP, so images load only with internet connectivity. This keeps GitHub upload small.
+
+HOW TO DEPLOY
+1. Extract all ZIP contents.
+2. Open extracted Orelqumi_Real_Photo_Cards_Cache_Fix folder.
+3. In File Explorer's address bar, type cmd and press Enter.
+4. Run: wrangler pages deploy public --project-name orelqum --branch main
+5. Wait until Deployment complete.
+6. FIRST open the new deployment preview URL printed by Wrangler.
+7. THEN open https://orelqum.pages.dev/?release=photo-v3-20261113 . Both should show the same image cards after production branch deployment.
+8. If one tab still shows an older page, close ALL tabs for the site and open a new InPrivate/Incognito window; clear browser site data if needed. Note Pages preview URLs are frozen to the version originally deployed. Never compare a past preview URL to the main site's latest version.
+
+DATABASE: original D1 binding configuration is preserved in wrangler.json. NO database schema changes.
+
+SITE BUILD: code package preserved; server functionality needs live verification on your Cloudflare project.
