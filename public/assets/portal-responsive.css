@@ -1,0 +1,23 @@
+/* Portal mobile refinement — customer data remains private. */
+@media(max-width:800px){
+ .portal-shell{width:100%;max-width:100%;}
+ .portal-panel{max-width:100%;overflow:hidden;}
+ .portal-view{min-width:0;}
+ .portal-table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+ .portal-table{width:max-content;min-width:660px;}
+ .portal-cards,.portal-admin-grid{grid-template-columns:minmax(0,1fr);}
+}
+@media(max-width:560px){
+ .portal-header{flex-wrap:wrap;gap:10px;}
+ .portal-brand{min-width:0;}
+ .portal-header-nav{margin-left:auto;gap:8px;}
+ .portal-tabs{flex-wrap:nowrap;overflow-x:auto;padding:15px 0 10px;scrollbar-width:thin;}
+ .portal-tab{white-space:nowrap;flex-shrink:0;min-height:44px;}
+ .portal-kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
+ .portal-kpi{min-width:0;}
+ .portal-panel{padding:16px 13px;}
+ .portal-admin-form{grid-template-columns:minmax(0,1fr);}
+ .portal-field input,.portal-field select,.portal-field textarea{font-size:16px;min-width:0;}
+ .portal-access{padding:24px 14px;}
+ .portal-access-card{padding:24px 18px;border-radius:19px;}
+}
