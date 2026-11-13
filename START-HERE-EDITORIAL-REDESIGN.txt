@@ -1,0 +1,23 @@
+ORELQUMI TECHNOLOGIES — PREMIUM MOBILE-FIRST REDESIGN (13 NOV 2026)
+
+WHAT CHANGED
+- Homepage rebuilt with an original editorial visual style informed by clean professional agency patterns; not a copy of another website.
+- Services, style concepts, clear starting prices, 4-step process, academy, FAQ and quotation CTA.
+- Responsive layouts across desktop, tablets and smartphones.
+- Keeps existing quote calculator, CRM, D1 config, Paystack Functions and Google verification tag.
+- No invented awards, reviews, portfolios or completed client counts.
+
+DEPLOYMENT
+1) Extract this ZIP. Upload extracted files and folders (public, functions, db, wrangler.json, and docs) to GitHub repo root if desired.
+2) Your Cloudflare Pages project uses Wrangler direct deployment: GitHub uploads alone do not automatically publish this site.
+3) In the extracted folder, open Windows Command Prompt and run:
+   wrangler pages deploy public --project-name orelqum --branch main
+   Check the Cloudflare binding DB -> orelqumi-portal and PAYSTACK_SECRET_KEY (encrypted) before using private features.
+4) Check https://orelqum.pages.dev/ on actual Android and desktop browsers.
+
+IMPORTANT
+- public/assets/config.js still has a blank business email. Set a verified address to receive email-form enquiries.
+- Price calculator results are indicative; invoice/payments must be verified server-side.
+- Portfolio design concepts are marked illustrative; replace with genuine authorised client work when available.
+- Browser screenshot review was restricted in this environment; visual appearance on live devices remains to be verified.
+- Do not place real customer information or secret API keys in GitHub.
