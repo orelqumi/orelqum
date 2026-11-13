@@ -215,3 +215,15 @@
 @media (max-width:760px){.editorial-home .e-service-card{min-height:0}.editorial-home .e-service-photo{height:205px}.editorial-home .e-section{padding:52px 0}}
 @media (max-width:520px){.editorial-home .e-service-photo{height:215px}}
 @media (prefers-reduced-motion:reduce){.editorial-home .e-service-photo img,.editorial-home .e-mock-browser{transition:none!important;animation:none!important}}
+
+/* Orelqumi smoother, slightly faster premium motion — 2026-11-13 */
+.editorial-home .e-preview-frame{animation-duration:4.8s}
+.editorial-home .e-showcase-large .e-mock-browser{animation-duration:6.4s}
+.editorial-home .e-showcase:nth-child(2) .e-mock-browser{animation-duration:7.4s}
+.editorial-home .e-showcase:nth-child(3) .e-mock-browser{animation-duration:6.8s}
+.editorial-home .e-service-photo img{animation:orelqumiPhotoBreathe 7.5s ease-in-out infinite;transition:transform .5s ease,filter .35s ease}
+.editorial-home .e-service-card:nth-child(2) .e-service-photo img{animation-delay:-1.6s}
+.editorial-home .e-service-card:nth-child(3) .e-service-photo img{animation-delay:-3s}
+.editorial-home .e-service-card:nth-child(4) .e-service-photo img{animation-delay:-4.5s}
+@keyframes orelqumiPhotoBreathe{0%,100%{transform:scale(1.005)}50%{transform:scale(1.035)}}
+@media(prefers-reduced-motion:reduce){.editorial-home .e-preview-frame,.editorial-home .e-showcase .e-mock-browser,.editorial-home .e-service-photo img{animation:none!important}}
