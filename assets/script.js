@@ -1,30 +1,39 @@
 // Orelqumi Technologies — static site interactions.
 const menu=document.querySelector('.menu-btn'),nav=document.querySelector('.nav-links');
 if(menu&&nav){menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false')}))}
-// Static hosting has no server. An email draft is opened instead of claiming a submission was received.
-document.querySelectorAll('form[data-enquiry]').forEach(form=>form.addEventListener('submit',e=>{
- e.preventDefault();if(!form.reportValidity())return;
- const data=new FormData(form),kind=form.dataset.enquiry,subject='Orelqumi — '+(kind==='enrol'?'Academy enrolment enquiry':kind==='quote'?'Website project enquiry':'General contact enquiry');
- const rows=[...data.entries()].filter(([k])=>k!=='_gotcha').map(([k,v])=>`${k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}: ${v}`);
- const recipient=window.ORELQUMI_CONTACT_EMAIL||'';
- const destination=recipient?recipient:'';
- const body=`Hello Orelqumi Technologies,\n\n${rows.join('\n')}\n\nSent from the Orelqumi website.`;
- const msg=form.querySelector('[data-form-status]');
- if(!recipient || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)){
-   if(msg){
-     msg.textContent='The business contact email is not configured yet. Copy your enquiry using the button below, or contact Orelqumi using the Contact page. Your information has not been sent.';
-     msg.hidden=false;
-     let copyBtn=form.querySelector('[data-copy-enquiry]');
-     if(!copyBtn){copyBtn=document.createElement('button');copyBtn.type='button';copyBtn.className='btn btn-outline';copyBtn.setAttribute('data-copy-enquiry','');msg.insertAdjacentElement('afterend',copyBtn);}
-     copyBtn.textContent='Copy enquiry details';
-     copyBtn.onclick=async()=>{const message=subject+'\n\n'+body;try{await navigator.clipboard.writeText(message);copyBtn.textContent='Enquiry copied';}catch{const area=document.createElement('textarea');area.value=message;area.style.width='100%';area.rows=8;copyBtn.insertAdjacentElement('afterend',area);area.select();copyBtn.textContent='Select and copy the enquiry below';}};
-   }
-   return;
- }
- const href='mailto:'+recipient+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
- if(msg){msg.textContent='Your email app should open with the enquiry ready to send. Press Send in your email app to submit it.';msg.hidden=false;}
- window.location.href=href;
-}));
+// Enquiries are stored in Cloudflare D1 and reviewed in the private Owner Dashboard.
+// GitHub Pages uses the Cloudflare API; Cloudflare-hosted pages use a same-origin endpoint.
+const ORELQUMI_ENQUIRY_ENDPOINT = location.hostname==='orelqumi.github.io'
+ ? 'https://orelqum.pages.dev/api/public-enquiry' : '/api/public-enquiry';
+document.querySelectorAll('form[data-enquiry]').forEach(form=>{
+  const kind=form.dataset.enquiry;
+  // Invisible honeypot to catch basic automated form submissions.
+  const trap=document.createElement('input');trap.name='website_url';trap.type='text';trap.tabIndex=-1;trap.autocomplete='off';
+  trap.setAttribute('aria-hidden','true');trap.style.cssText='position:absolute;left:-10000px;width:1px;height:1px;opacity:0';form.append(trap);
+  const started=Date.now();
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();if(!form.reportValidity())return;
+    const data=new FormData(form),msg=form.querySelector('[data-form-status]'),button=form.querySelector('button[type=submit]');
+    const plain=(key)=>String(data.get(key)||'').trim();
+    const type=kind==='quote'?(plain('package')||'Website quotation'):
+      kind==='enrol'?'Academy training enquiry':(plain('topic')||'General contact');
+    const lines=[...data.entries()].filter(([key,value])=>!['website_url','privacy_consent'].includes(key)&&String(value).trim())
+      .map(([key,value])=>`${key.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}: ${value}`);
+    const payload={kind,full_name:plain('full_name'),email:plain('email'),phone:plain('phone'),website_type:type,
+      privacy_consent:data.has('privacy_consent'),form_started_at:started,website_url:plain('website_url'),
+      notes:lines.join('\n').slice(0,1500)};
+    if(msg){msg.hidden=false;msg.textContent='Sending your enquiry securely…';}
+    button.disabled=true;
+    try{
+      const res=await fetch(ORELQUMI_ENQUIRY_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),mode:'cors',credentials:'omit'});
+      const result=await res.json().catch(()=>({}));
+      if(!res.ok||!result.ok)throw Error(result.error||'Could not submit your enquiry.');
+      if(msg)msg.textContent='Thank you! Your enquiry has been received. Orelqumi will contact you using the details provided.';
+      form.reset();
+    }catch(err){if(msg)msg.textContent=err.message||'Your enquiry was not sent. Please check your connection and try again.';}
+    finally{button.disabled=false;}
+  });
+});
 
 // Animated navigation state: highlights the current page and closes the menu on escape.
 const pageName=window.location.pathname.split('/').pop()||'index.html';

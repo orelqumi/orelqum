@@ -1,0 +1,1 @@
+DIRECT CRM ENQUIRIES: Upload extracted files DIRECTLY to github.com/orelqumi/orelqum main /(root). This package preserves the Orelqumi Balanced Visible Animations design. Deploy the SEPARATE Cloudflare CRM ZIP FIRST; GitHub Pages cannot process forms itself. Cloudflare receives the public form submissions and stores them as leads visible to the owner. No GitHub secrets needed.
